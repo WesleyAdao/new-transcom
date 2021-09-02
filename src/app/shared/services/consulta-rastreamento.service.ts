@@ -2,7 +2,6 @@ import { Consulta } from './../interfaces/consulta.interfaces';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
 import { Consultas } from '../models/consultas.model';
 
 @Injectable({
@@ -10,28 +9,33 @@ import { Consultas } from '../models/consultas.model';
 })
 export class ConsultaRastreamentoService {
 
-  consultas!: Consulta;
+  consultas = new Consultas()
 
   constructor(
-    private http: HttpClient,
-    private router: Router
+    private http: HttpClient
   ) { }
-/*
-  public getConsulta(): Observable<any> {
-
-    return this.http.get('http://localhost:3000/consulta');
-
-  }*/
 
   public getConsulta(): Observable<Array<Consultas>> {
     return this.http.get<Array<Consultas>>('http://localhost:3000/consulta');
   }
 
-  public consultar(codigo: number) {
-    this.getConsulta().subscribe(resp => {
-      const pbjet = resp.find(v => v.codigo === codigo)
+  public consulta() { return this.consultas; }
+
+  public consultar(codigo: number): Promise<Consultas> {
+    return new Promise((resolve, reject) => {
+      this.getConsulta().subscribe(resp => {
+        const object = resp.find(v => v.codigo === codigo);
+        if (object) {
+          this.consultas = object
+          resolve(object)
+        } else {
+          reject(null)
+        }
+      },
+      err => {
+        reject(null)
+      })
     })
-    this.router.navigate(['/acompanhamento']);
     
   }
 

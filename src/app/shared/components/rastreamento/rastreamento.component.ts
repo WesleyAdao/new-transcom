@@ -1,6 +1,7 @@
 import { ConsultaRastreamentoService } from './../../services/consulta-rastreamento.service';
 import { Component, OnInit } from '@angular/core';
 import { Consulta } from '../../interfaces/consulta.interfaces';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-rastreamento',
@@ -10,12 +11,12 @@ import { Consulta } from '../../interfaces/consulta.interfaces';
 export class RastreamentoComponent implements OnInit {
 
   consultas!: Consulta;
-  codigo!: number;
+  codigo!: string;
+  notFound = false;
 
   constructor(
-
     private consultaRastreamentoService: ConsultaRastreamentoService,
-
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -23,11 +24,15 @@ export class RastreamentoComponent implements OnInit {
 
   consultar(form: any) {
 
-    this.consultaRastreamentoService.consultar(this.codigo);
-    console.log(form.value);
-    console.log(this.codigo);
-
+    this.consultaRastreamentoService.consultar(Number.parseInt(this.codigo, 0)).then(
+      result => {
+        this.router.navigate(['/acompanhamento']);
+      }
+    ).catch(
+      err => {
+        this.notFound = true;
+      }
+    )
   }
-
 }
 

@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ConsultaRastreamentoService } from './../../services/consulta-rastreamento.service';
 import { Consulta } from '../../interfaces/consulta.interfaces';
+import { Consultas } from '../../models/consultas.model';
+import { BehaviorSubject } from 'rxjs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-acompanhamento',
@@ -9,10 +12,11 @@ import { Consulta } from '../../interfaces/consulta.interfaces';
 })
 export class AcompanhamentoComponent implements OnInit {
 
-  consultas!: Array<Consulta>;
+  consultas = new BehaviorSubject<Array<Consultas>>([])
 
   constructor(
-    private consultaRastreamentoService: ConsultaRastreamentoService
+    private consultaRastreamentoService: ConsultaRastreamentoService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -20,18 +24,11 @@ export class AcompanhamentoComponent implements OnInit {
   }
 
   getter() {
-
-    this.consultaRastreamentoService.getConsulta()
-    .subscribe(data => {
-      this.consultas = data;
-      //debugger;
-      console.log("Teste1", data);
-    }, error => {
-       console.log("Teste2", error);
-    });
-
+    this.consultas.next([this.consultaRastreamentoService.consulta()])
   }
 
-
+  return() {
+    this.router.navigate(['/rastreamento']);
+  }
 
 }
