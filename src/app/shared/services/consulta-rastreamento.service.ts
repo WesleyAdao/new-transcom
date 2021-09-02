@@ -32,6 +32,7 @@ export class ConsultaRastreamentoService {
       const pbjet = resp.find(v => v.codigo === codigo)
     })
     this.router.navigate(['/acompanhamento']);
+    
   }
 
 }
