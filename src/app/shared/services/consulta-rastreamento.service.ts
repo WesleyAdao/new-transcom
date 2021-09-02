@@ -31,6 +31,7 @@ export class ConsultaRastreamentoService {
   public consultar(codigo: number) {
     
     this.router.navigate(['/acompanhamento']);
+    
   }
 
 }
