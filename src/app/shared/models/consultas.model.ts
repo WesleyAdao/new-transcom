@@ -12,4 +12,8 @@ export class Consultas {
   public dataEntrega!: string;
   public status!: string;
 
+  constructor() {
+    
+  }
+
 }
